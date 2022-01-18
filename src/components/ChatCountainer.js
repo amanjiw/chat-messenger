@@ -19,13 +19,12 @@ const ChatCountainer = () => {
 
   const selectedUser  = allUsers.find(user => user.email === emailId );
 
-
   return (
     <div className="chat-countainer">
       <div className="chat-container-herader">
         <div className="user-info">
           <div className="chat-user-img">
-            <img src={selectedUser?.potoURL} alt="" />
+            <img src={selectedUser?.photoURL} alt="" />
           </div>
           <p>{selectedUser?.fullName}</p>
         </div>
