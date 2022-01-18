@@ -1,0 +1,10 @@
+.cahtpage {
+  flex-direction: column;
+  justify-content: center;
+
+  /* display: flex; */
+  width: 100%;
+  position: relative;
+
+  z-index: 100;
+}

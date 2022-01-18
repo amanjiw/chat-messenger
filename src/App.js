@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import "./components/home.css";
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import LoginPage from "./components/LoginPage";
+import ChatPage from "./components/ChatPage";
+import SideBar from "./components/Sidebar";
+import { useAuthContext } from "./context/authStore";
 function App() {
+  const { currentUser, signInUser } = useAuthContext();
+
+  useEffect(() => {
+    signInUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {currentUser ? (
+        <div className="home">
+          <div className="home-container">
+            <SideBar />
+            <Routes>
+              <Route path="/chat-page" element={<ChatPage />} />
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </div>
+        </div>
+      ) : (
+        <LoginPage />
+      )}
+    </>
   );
 }
 

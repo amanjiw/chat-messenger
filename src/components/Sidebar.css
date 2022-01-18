@@ -1,0 +1,82 @@
+.sidebar {
+  min-width: 300px;
+  width: 30%;
+  border-right: 1px solid lightgray;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #fafafa;
+}
+
+.sidebarHeader {
+  height: 50px;
+  padding: 5px 0 5px 10px;
+  background-color: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.sidebarHeaderImg {
+  width: 42px;
+}
+
+.sidebarHeaderImg > img {
+  width: 100%;
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+.sidebarHeaderBTN {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 150px;
+  color: #51585c;
+}
+
+.sidebarHeaderBTN > .MuiSvgIcon-root {
+  font-size: 23px;
+}
+
+.sidebarSearch {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f6f6;
+}
+
+.sidebarSearchInput {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  background-color: #fff;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+
+.sidebarSearchInput > .MuiSvgIcon-root {
+  font-size: 18px;
+  color: #acacac;
+  margin-left: 10px;
+}
+
+.sidebarSearchInput > input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  margin-left: 6px;
+  margin-bottom: 2px;
+  width: 90%;
+}
+
+.sidebarChatlist {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-y: scroll;
+}
