@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import UserProfile from "./UserProfile";
 import "./Sidebar.css";
 import TollIcon from "@mui/icons-material/Toll";
@@ -8,11 +8,29 @@ import SearchIcon from "@mui/icons-material/Search";
 import profilepic from "../assets/img/profile-icon-png-898.png";
 import { useAuthContext } from "../context/authStore";
 const SideBar = () => {
-  const { currentUser, signOut } = useAuthContext();
-
+  const { currentUser, signOut, allUsers } = useAuthContext();
+  const [searchedInput, setSearchInput] = useState("");
   const signOutUser = () => {
     signOut();
   };
+
+  const searchedUser = allUsers?.filter((user) => {
+    if (searchedInput) {
+      return user.fullName.toLowerCase().includes(searchedInput.toLowerCase());
+    }
+  });
+
+  const searchItem = searchedUser.map((user, ind) => {
+    return (
+      <UserProfile
+        key={ind}
+        name={user.fullName}
+        photoUrl={user.photoURL}
+        email={user.email}
+      />
+    );
+  });
+
   return (
     <div className="sidebar">
       <div className="sidebarHeader">
@@ -28,12 +46,22 @@ const SideBar = () => {
       <div className="sidebarSearch">
         <div className="sidebarSearchInput">
           <SearchIcon />
-          <input type="text" placeholder="search..." />
+          <input
+            type="text"
+            placeholder="search..."
+            value={searchedInput}
+            onChange={(event) => {
+              setSearchInput(event.target.value);
+            }}
+          />
         </div>
       </div>
       <div className="sidebarChatlist">
-        <UserProfile name="amanj ghaderi" photoUrl={profilepic} />
-        <UserProfile name="amanj ghaderi" photoUrl={profilepic} />
+        {searchItem.length > 0 ? (
+          searchItem
+        ) : (
+          <UserProfile name="amanj ghaderi" photoUrl={profilepic} />
+        )}
       </div>
     </div>
   );

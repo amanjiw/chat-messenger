@@ -21,7 +21,7 @@ const LoginPage = () => {
 
       localStorage.setItem("user", JSON.stringify(newUser));
       signInUser(newUser);
-      db.collection("user").doc(response.user.email).set(newUser);
+      db.collection("users").doc(response.user.email).set(newUser);
       navigate("/");
     } catch (error) {
       console.log(error.message);

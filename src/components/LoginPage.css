@@ -40,7 +40,7 @@
 .logo-name {
   font-size: 17px;
   font-weight: 500;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 
 .login-btn {
@@ -58,14 +58,11 @@
   cursor: pointer;
 }
 
-
-.login-btn:hover{
+.login-btn:hover {
   background-color: #005541;
 }
-
 
 .login-btn > img {
   width: 20px;
   margin-right: 10px;
-
 }
