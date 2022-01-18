@@ -27,4 +27,5 @@
 .user-name {
     text-transform: capitalize;
     font-size: 15px;
+    margin-left: 10px;
 }
