@@ -6,12 +6,21 @@ import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
 import ChatPage from "./components/ChatPage";
 import SideBar from "./components/Sidebar";
+import db from "./firebase";
 import { useAuthContext } from "./context/authStore";
 function App() {
   const { currentUser, signInUser } = useAuthContext();
 
   useEffect(() => {
     signInUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const data = await db.collection("user").onSnapshot((snapshot) => {
+        console.log(snapshot.docs);
+      });
+    })();
   }, []);
 
   return (
