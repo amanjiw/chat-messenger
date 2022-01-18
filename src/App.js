@@ -9,7 +9,7 @@ import SideBar from "./components/Sidebar";
 import db from "./firebase";
 import { useAuthContext } from "./context/authStore";
 function App() {
-  const { currentUser, signInUser } = useAuthContext();
+  const { currentUser, signInUser, allUsers, getAllUsers } = useAuthContext();
 
   useEffect(() => {
     signInUser(JSON.parse(localStorage.getItem("user")));
@@ -17,11 +17,19 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const data = await db.collection("user").onSnapshot((snapshot) => {
-        console.log(snapshot.docs);
+      const data = await db.collection("users").onSnapshot((snapshot) => {
+        if (currentUser) {
+          let users;
+          users = snapshot.docs
+            .map((doc) => doc.data())
+            .filter((doc) => {
+              return doc.email !== currentUser.email;
+            });
+          getAllUsers(users);
+        }
       });
     })();
-  }, []);
+  }, [currentUser]);
 
   return (
     <>
@@ -30,7 +38,7 @@ function App() {
           <div className="home-container">
             <SideBar />
             <Routes>
-              <Route path="/chat-page" element={<ChatPage />} />
+              <Route path="/:emailId" element={<ChatPage />} />
               <Route path="/" element={<Home />} />
             </Routes>
           </div>
