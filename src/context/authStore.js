@@ -4,17 +4,24 @@ const AuthStore = createContext({
   currentUser: null,
   allUsers: [],
   getAllUsers: () => {},
+  activeMenu: () => {},
+  hideMenu: () => {},
   signInUser: () => {},
   signOut: () => {},
 });
 
 const initialState = {
   currentUser: null,
+  menuActive: false,
   allUsers: [],
 };
 
 //## Reducer
 const authReducer = (state, action) => {
+  if (action.type === "ACTIVE_MENUE") return { ...state, menuActive: true };
+
+  if (action.type === "HIDE_MENUE") return { ...state, menuActive: false };
+
   // # signin user
   if (action.type === "SIGNIN")
     return { ...state, currentUser: action.payload };
@@ -46,8 +53,25 @@ const AuthProvider = ({ children }) => {
     dispatchState({ type: "GET_ALL_USERS", payload: data });
   };
 
+  const activeMenu = () => {
+    dispatchState({ type: "ACTIVE_MENUE" });
+  };
+
+  const hideMenu = () => {
+    dispatchState({ type: "HIDE_MENUE" });
+  };
+
   return (
-    <AuthStore.Provider value={{ ...state, signInUser, signOut, getAllUsers }}>
+    <AuthStore.Provider
+      value={{
+        ...state,
+        signInUser,
+        signOut,
+        getAllUsers,
+        activeMenu,
+        hideMenu,
+      }}
+    >
       {children}
     </AuthStore.Provider>
   );

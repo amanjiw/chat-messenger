@@ -19,6 +19,7 @@
 
 .user-info {
   display: flex;
+  flex: 1;
   flex-direction: row;
   align-items: center;
   text-transform: capitalize;
@@ -113,4 +114,9 @@
   top: -200px;
   /* bottom: -15; */
   left: 4px;
+}
+
+
+.menu{
+  width: 5%;
 }

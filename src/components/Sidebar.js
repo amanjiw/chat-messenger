@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserProfile from "./UserProfile";
 import "./Sidebar.css";
 import TollIcon from "@mui/icons-material/Toll";
+
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,8 +11,9 @@ import { useAuthContext } from "../context/authStore";
 import db from "../firebase";
 
 const SideBar = () => {
-  const { currentUser, signOut, allUsers } = useAuthContext();
+  const { currentUser, signOut, allUsers, menuActive } = useAuthContext();
   const [searchedInput, setSearchInput] = useState("");
+
   const [friendsList, setFriendsList] = useState([]);
   const signOutUser = () => {
     signOut();
@@ -47,7 +49,7 @@ const SideBar = () => {
   }, []);
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${menuActive && "sidebar-active"}`}>
       <div className="sidebarHeader">
         <div className="sidebarHeaderImg" onClick={signOutUser}>
           <img src={currentUser.photoURL || profilepic} alt="profile img" />
@@ -76,14 +78,19 @@ const SideBar = () => {
           ? searchItem
           : friendsList &&
             friendsList.map((friend, i) => {
-              return <UserProfile
-                key={i}
-                name={friend.data().fullName}
-                photoUrl={friend.data().photoURL}
-                email={friend.data().email}
-                lastMessage={friend.data().lastMessage}
-              />;
+              return (
+                <UserProfile
+                  key={i}
+                  name={friend.data().fullName}
+                  photoUrl={friend.data().photoURL}
+                  email={friend.data().email}
+                  lastMessage={friend.data().lastMessage}
+                />
+              );
             })}
+        {friendsList.length < 1 && searchItem < 1 && (
+          <p className="no-chat-yet">No chat yet ...</p>
+        )}
       </div>
     </div>
   );

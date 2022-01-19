@@ -3,6 +3,7 @@ import "./ChatCountainer.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticon from "@mui/icons-material/InsertEmoticon";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import MenuIcon from '@mui/icons-material/Menu';
 import SendIcon from "@mui/icons-material/Send";
 import ChatMessage from "./ChatMessage";
 import Picker from "emoji-picker-react";
@@ -14,7 +15,7 @@ import db from "../firebase";
 //#=>
 const ChatCountainer = () => {
   const [chatData, setChatData] = useState([]);
-  const { allUsers, currentUser } = useAuthContext();
+  const { allUsers, currentUser, activeMenu } = useAuthContext();
   const [message, setMessage] = useState("");
   const [openEmojiBox, setOpenEmojiBox] = useState(false);
   const { emailId } = useParams();
@@ -95,6 +96,9 @@ const ChatCountainer = () => {
   return (
     <div className="chat-countainer">
       <div className="chat-container-herader">
+        <div className="menu" onClick={activeMenu}>
+          <MenuIcon/>
+        </div>
         <div className="user-info">
           <div className="chat-user-img">
             <img src={selectedUser?.photoURL} alt="" />

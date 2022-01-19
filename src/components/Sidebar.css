@@ -9,6 +9,7 @@
   background-color: #fafafa;
 }
 
+
 .sidebarHeader {
   height: 50px;
   padding: 5px 0 5px 10px;
@@ -80,3 +81,32 @@
   flex-direction: column;
   overflow-y: scroll;
 }
+
+
+.no-chat-yet{
+  font-size:16px;
+  margin-left: 20px;
+  margin-top: 15px;
+  color: gray;
+}
+
+
+@media (max-width:700px) {
+
+.sidebar{
+  display: none;
+  transition: all 0.3s;
+}
+
+.sidebar-active{
+  display: block;
+  width:100%;
+  min-width: 100%;
+
+}
+
+  
+}
+
+
+
