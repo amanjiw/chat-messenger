@@ -8,16 +8,46 @@ import ChatMessage from "./ChatMessage";
 import Picker from "emoji-picker-react";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../context/authStore";
+import firebase from "firebase";
+import db from "../firebase";
 
 //#=>
 const ChatCountainer = () => {
-  const { allUsers } = useAuthContext();
+  const { allUsers, currentUser } = useAuthContext();
   const [message, setMessage] = useState("");
-  const [openEmojiBox, setOpenEmojiBox] = useState(true);
-  const {emailId} = useParams();
-  console.log(emailId)
+  const [openEmojiBox, setOpenEmojiBox] = useState(false);
+  const { emailId } = useParams();
+  console.log(emailId);
 
-  const selectedUser  = allUsers.find(user => user.email === emailId );
+  const selectedUser = allUsers.find((user) => user.email === emailId);
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (emailId && message !== "") {
+      let payload = {
+        text: message,
+        senderEmail: currentUser.email,
+        reciverEmail: emailId,
+        timeStamp: firebase.firestore.Timestamp.now(),
+      };
+
+      // # Sender
+      db.collection("chats")
+      .doc(currentUser.email)
+      .collection("messages")
+      .add(payload);
+      
+      // # Reciver
+      db.collection("chats").doc(emailId).collection("messages").add(payload);
+
+
+
+      //
+
+
+      setMessage("");
+    }
+  };
 
   return (
     <div className="chat-countainer">
@@ -54,7 +84,7 @@ const ChatCountainer = () => {
           />
           <AttachFileIcon />
         </div>
-        <form>
+        <form onSubmit={sendMessage}>
           <input
             type="text"
             placeholder="Type a message"
@@ -62,7 +92,7 @@ const ChatCountainer = () => {
             onChange={(e) => setMessage(e.target.value)}
           />
         </form>
-        <div className="chat-input-send-btn">
+        <div className="chat-input-send-btn" onClick={sendMessage}>
           <SendIcon />
         </div>
       </div>
