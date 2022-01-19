@@ -18,7 +18,7 @@ const ChatCountainer = () => {
   const [message, setMessage] = useState("");
   const [openEmojiBox, setOpenEmojiBox] = useState(false);
   const { emailId } = useParams();
-  const chatBox = useRef(null)
+  const chatBox = useRef(null);
   const selectedUser = allUsers.find((user) => user.email === emailId);
 
   useEffect(() => {
@@ -41,10 +41,13 @@ const ChatCountainer = () => {
     })();
   }, []);
 
-
-  useEffect(()=>{
-    console.log("chatBox >>>" , chatBox)
-  },[chatData])
+  useEffect(() => {
+    chatBox.current.addEventListener("DOMNodeInserted", (event) => {
+      const { currentTarget: target } = event;
+      console.log(target);
+      target.scroll({ top: target.scrollHeight, behavior: "smooth" });
+    });
+  }, [chatData]);
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -103,7 +106,7 @@ const ChatCountainer = () => {
           <MoreVertIcon />
         </div>
       </div>
-      <div className="chat-display-container" ref={chatBox} >
+      <div className="chat-display-container" ref={chatBox}>
         {chatData.length > 0 &&
           chatData.map((message, i) => {
             return (

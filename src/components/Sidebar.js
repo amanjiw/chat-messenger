@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserProfile from "./UserProfile";
 import "./Sidebar.css";
 import TollIcon from "@mui/icons-material/Toll";
@@ -7,9 +7,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import profilepic from "../assets/img/profile-icon-png-898.png";
 import { useAuthContext } from "../context/authStore";
+import db from "../firebase";
+
 const SideBar = () => {
   const { currentUser, signOut, allUsers } = useAuthContext();
   const [searchedInput, setSearchInput] = useState("");
+  const [friendsList, setFriendsList] = useState([]);
   const signOutUser = () => {
     signOut();
   };
@@ -30,6 +33,18 @@ const SideBar = () => {
       />
     );
   });
+
+  useEffect(() => {
+    (async () => {
+      const data = db
+        .collection("friendlist")
+        .doc(currentUser.email)
+        .collection("list")
+        .onSnapshot((snapshot) => {
+          setFriendsList(snapshot.docs);
+        });
+    })();
+  }, []);
 
   return (
     <div className="sidebar">
@@ -57,11 +72,18 @@ const SideBar = () => {
         </div>
       </div>
       <div className="sidebarChatlist">
-        {searchItem.length > 0 ? (
-          searchItem
-        ) : (
-          <UserProfile name="amanj ghaderi" photoUrl={profilepic} />
-        )}
+        {searchItem.length > 0
+          ? searchItem
+          : friendsList &&
+            friendsList.map((friend, i) => {
+              return <UserProfile
+                key={i}
+                name={friend.data().fullName}
+                photoUrl={friend.data().photoURL}
+                email={friend.data().email}
+                lastMessage={friend.data().lastMessage}
+              />;
+            })}
       </div>
     </div>
   );

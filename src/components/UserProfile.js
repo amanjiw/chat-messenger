@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./usrProfile.css";
 import userProfile from "../assets/img/profile-icon-png-898.png";
 
-const UserProfile = ({ name, photoUrl, email }) => {
+const UserProfile = ({ name, photoUrl, email , lastMessage }) => {
   const navigate = useNavigate();
 
   const goToUserChatPage = (emailId) => {
@@ -17,6 +17,7 @@ const UserProfile = ({ name, photoUrl, email }) => {
       </div>
       <div className="usr-info">
         <p className="user-name">{name}</p>
+        {lastMessage && (<p className="user-last-message">{lastMessage}</p>)}
       </div>
     </div>
   );
