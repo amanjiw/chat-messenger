@@ -118,5 +118,15 @@
 
 
 .menu{
+  display: none;
   width: 5%;
+}
+
+
+@media (max-width:700px){
+  .menu{
+
+    display: block;
+
+  }
 }
