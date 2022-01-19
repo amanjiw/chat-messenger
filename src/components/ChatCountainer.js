@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ChatCountainer.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticon from "@mui/icons-material/InsertEmoticon";
@@ -13,13 +13,36 @@ import db from "../firebase";
 
 //#=>
 const ChatCountainer = () => {
+  const [chatData, setChatData] = useState([]);
   const { allUsers, currentUser } = useAuthContext();
   const [message, setMessage] = useState("");
   const [openEmojiBox, setOpenEmojiBox] = useState(false);
   const { emailId } = useParams();
-  console.log(emailId);
 
   const selectedUser = allUsers.find((user) => user.email === emailId);
+
+  useEffect(() => {
+    (async () => {
+      const data = db
+        .collection("chats")
+        .doc(emailId)
+        .collection("messages")
+        .orderBy("timeStamp", "asc")
+        .onSnapshot((snapshot) => {
+          let messages = snapshot.docs.map((doc) => doc.data());
+          let filteredMessages = messages.filter(
+            (message) =>
+              message.senderEmail === (currentUser.email || emailId) ||
+              message.reciverEmail === (currentUser.email || emailId)
+          );
+
+          setChatData(filteredMessages);
+        });
+    })();
+
+
+    console.log(chatData);
+  }, []);
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -33,18 +56,33 @@ const ChatCountainer = () => {
 
       // # Sender
       db.collection("chats")
-      .doc(currentUser.email)
-      .collection("messages")
-      .add(payload);
-      
+        .doc(currentUser.email)
+        .collection("messages")
+        .add(payload);
+
       // # Reciver
       db.collection("chats").doc(emailId).collection("messages").add(payload);
 
+      //update friends list
+      db.collection("friendlist")
+        .doc(currentUser.email)
+        .collection("list")
+        .doc(emailId)
+        .set({
+          ...selectedUser,
+          lastMessage: message,
+        });
 
+      db.collection("friendlist")
+        .doc(emailId)
+        .collection("list")
+        .doc(currentUser.email)
+        .set({
+          ...selectedUser,
+          lastMessage: message,
+        });
 
-      //
-
-
+      //////////////////////
       setMessage("");
     }
   };
