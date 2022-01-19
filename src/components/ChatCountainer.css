@@ -2,11 +2,12 @@
   min-width: 348px;
   display: flex;
   flex-direction: column;
-  /* flex: 1; */
+  height: 100%;
 }
 
 .chat-container-herader {
   display: flex;
+  /* flex:2 ; */
   align-items: center;
   height: 50px;
   /* width: 100%; */
@@ -41,9 +42,9 @@
 .chat-display-container {
   display: flex;
   flex-direction: column;
-  /* flex:1; */
-
-  height: 890px;
+  flex: 1;
+  padding-bottom: 70px;
+  /* height: 890px; */
   /* height: ; */
   overflow-y: scroll;
   background-color: #d3d3d1;

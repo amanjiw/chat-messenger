@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ChatCountainer.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticon from "@mui/icons-material/InsertEmoticon";
@@ -18,7 +18,7 @@ const ChatCountainer = () => {
   const [message, setMessage] = useState("");
   const [openEmojiBox, setOpenEmojiBox] = useState(false);
   const { emailId } = useParams();
-
+  const chatBox = useRef(null)
   const selectedUser = allUsers.find((user) => user.email === emailId);
 
   useEffect(() => {
@@ -39,10 +39,12 @@ const ChatCountainer = () => {
           setChatData(filteredMessages);
         });
     })();
-
-
-    console.log(chatData);
   }, []);
+
+
+  useEffect(()=>{
+    console.log("chatBox >>>" , chatBox)
+  },[chatData])
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -101,8 +103,18 @@ const ChatCountainer = () => {
           <MoreVertIcon />
         </div>
       </div>
-      <div className="chat-display-container">
-        <ChatMessage />
+      <div className="chat-display-container" ref={chatBox} >
+        {chatData.length > 0 &&
+          chatData.map((message, i) => {
+            return (
+              <ChatMessage
+                key={i}
+                message={message.text}
+                time={message.timeStamp}
+                sender={message.senderEmail}
+              />
+            );
+          })}
       </div>
       <div className="chat-input">
         <div className="mn">
