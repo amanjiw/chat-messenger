@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+
+import { useParams } from "react-router-dom";
 import "./ChatCountainer.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticon from "@mui/icons-material/InsertEmoticon";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import SendIcon from "@mui/icons-material/Send";
 import ChatMessage from "./ChatMessage";
 import Picker from "emoji-picker-react";
-import { useParams } from "react-router-dom";
 import { useAuthContext } from "../context/authStore";
 import firebase from "firebase";
 import db from "../firebase";
@@ -19,33 +20,47 @@ const ChatCountainer = () => {
   const [message, setMessage] = useState("");
   const [openEmojiBox, setOpenEmojiBox] = useState(false);
   const { emailId } = useParams();
+
   const chatBox = useRef(null);
   const selectedUser = allUsers.find((user) => user.email === emailId);
 
   useEffect(() => {
-    (async () => {
-      const data = db
-        .collection("chats")
-        .doc(emailId)
-        .collection("messages")
-        .orderBy("timeStamp", "asc")
-        .onSnapshot((snapshot) => {
-          let messages = snapshot.docs.map((doc) => doc.data());
-          let filteredMessages = messages.filter(
-            (message) =>
-              message.senderEmail === (currentUser.email || emailId) ||
-              message.reciverEmail === (currentUser.email || emailId)
-          );
+    console.log("## 1 >>>>>", emailId);
+    if (selectedUser.email === emailId)
+      (async () => {
+        const data = db
+          .collection("chats")
+          .doc(emailId)
+          .collection("messages")
+          .orderBy("timeStamp", "asc")
+          .onSnapshot((snapshot) => {
+            let messages = snapshot.docs.map((doc) => doc.data());
+            let filteredMessages = messages.filter((message) => {
+              // (message.senderEmail === (currentUser.email || emailId)) &&
+              // (message.reciverEmail === (currentUser.email || emailId))
 
-          setChatData(filteredMessages);
-        });
-    })();
-  }, []);
+              if (
+                (message.senderEmail === currentUser.email ||
+                  message.senderEmail === emailId) &&
+                (message.reciverEmail === currentUser.email ||
+                  message.reciverEmail === emailId)
+              ) {
+                return message;
+              }
+            });
+
+            console.log(filteredMessages, "<<<------------------)))");
+            setChatData(filteredMessages);
+          });
+      })();
+  }, [emailId]);
+
+  console.log("## 2 >>>>>", emailId);
 
   useEffect(() => {
     chatBox.current.addEventListener("DOMNodeInserted", (event) => {
       const { currentTarget: target } = event;
-      console.log(target);
+      // console.log(target);
       target.scroll({ top: target.scrollHeight, behavior: "smooth" });
     });
   }, [chatData]);
@@ -70,6 +85,11 @@ const ChatCountainer = () => {
       db.collection("chats").doc(emailId).collection("messages").add(payload);
 
       //update friends list
+      console.log({
+        ...selectedUser,
+        lastMessage: message,
+      });
+
       db.collection("friendlist")
         .doc(currentUser.email)
         .collection("list")
@@ -84,7 +104,7 @@ const ChatCountainer = () => {
         .collection("list")
         .doc(currentUser.email)
         .set({
-          ...selectedUser,
+          ...currentUser,
           lastMessage: message,
         });
 
@@ -97,7 +117,7 @@ const ChatCountainer = () => {
     <div className="chat-countainer">
       <div className="chat-container-herader">
         <div className="menu" onClick={activeMenu}>
-          <MenuIcon/>
+          <MenuIcon />
         </div>
         <div className="user-info">
           <div className="chat-user-img">
